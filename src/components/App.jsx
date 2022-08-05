@@ -64,7 +64,7 @@ const App = () => {
       {status === "pending" && <Loader />}
       {(status === "resolved" || gallery.length > 0) && <ImageGallery imageGallery={gallery} openModal={getModalImage} />}
       {(gallery.length > 0 && gallery.length < totalHits) && <Button onClick={handleClick} />}
-      {isModalOpen && <Modal largeImgUrl={modalImg.largeImageURL} tag={modalImg.tag} closeModal={closeModal} /> }           
+      {isModalOpen && <Modal largeImgUrl={modalImg.largeImageURL} tag={modalImg.tag} onClose={closeModal} /> }           
     </>
     )
   

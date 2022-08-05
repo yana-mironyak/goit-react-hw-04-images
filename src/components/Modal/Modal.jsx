@@ -1,43 +1,43 @@
-import { Component } from 'react';
+import { useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import PropTypes from 'prop-types';
 import css from '../Modal/Modal.module.css';
 
 const modalRoot = document.querySelector('#modal-root')
 
-export default class Modal extends Component {
-    componentDidMount() {
-        window.addEventListener('keydown', this.handleKeyDown)
-    }
+const Modal = ({onClose, largeImgUrl, tag}) => {
+    useEffect(() => {
+        const handleKeyDown = evt => {
+            if (evt.code === 'Escape') {
+                console.log(evt)
+                onClose()
+            }
+        }
+        window.addEventListener('keydown', handleKeyDown);
 
-    componentWillUnmount() { 
-        window.removeEventListener('keydown', this.handleKeyDown)
-    }
-    
-    handleKeyDown = evt => {
-        if(evt.code === 'Escape') {this.props.closeModal()}
-    }
-    
-    handleClick= (evt) => {
-        if (evt.currentTarget === evt.target) { this.props.closeModal() }
+        return () => window.removeEventListener('keydown', handleKeyDown);
+
+    }, [onClose])
+
+    const handleClick = evt => {
+        if (evt.currentTarget === evt.target) { onClose() }
   }
     
-    render() {
-        const { largeImgUrl, tag } = this.props;
-        return createPortal(
-            <div className={css.overlay} onClick={this.handleClick}>
-                <div className={css.modal}>
-                    <img src={largeImgUrl} alt={tag} />
-                </div>
-            </div>,
-            modalRoot,
-        )
-    }    
+    return createPortal(
+        <div className={css.overlay} onClick={handleClick}>
+            <div className={css.modal}>
+                <img src={largeImgUrl} alt={tag} />
+            </div>
+        </div>,
+        modalRoot,
+    )    
 }
 
 Modal.propsTypes = {
     largeImgUrl: PropTypes.string.isRequired,
     tag: PropTypes.string.isRequired,
-    closeModal: PropTypes.func.isRequired,
+    onClose: PropTypes.func.isRequired,
 }
+
+export default Modal;
 
